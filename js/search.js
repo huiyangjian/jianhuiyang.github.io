@@ -23,19 +23,9 @@ var searchFunc = function (path, search_id, content_id) {
   $.ajax({
     url: path,
     dataType: 'xml',
-    complete: function (xmlResponse) {
+    success: function (xmlResponse) {
       // get the contents from search data
-        /* 由于 xml 不支持特殊字符，所有手动转 */
-        function createXml(str){
-            if(document.all){
-                var xmlDom=new ActiveXObject("Microsoft.XMLDOM");
-                xmlDom.loadXML(str);
-                return xmlDom;
-            }
-            else
-                return new DOMParser().parseFromString(str, "text/xml");
-        }
-      var datas = $("entry", createXml(xmlResponse.responseText)).map(function () {
+      var datas = $("entry", xmlResponse).map(function () {
         return {
           title: $("title", this).text(),
           content: $("content", this).text(),
@@ -141,7 +131,7 @@ var searchFunc = function (path, search_id, content_id) {
       }
     },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
-          console.log('文章中出现特殊字符，导致解析xml出现问题，系统自动采用第二方案：进行主动解析！！！ 请检查全文搜索是否有问题，如出现问题，请及时在 https://github.com/yelog/hexo-theme-3-hexo/issues 中提出来，作者会尽快处理！')
+          console.log(textStatus)
       }
   });
 }
