@@ -2,9 +2,9 @@
 <html>
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
-  <title>Hexo</title>
-  <meta name="keywords" content="">
-  <meta name="description" content="Hexo">
+  <title>00.Kubernetes介绍.md | Hexo</title>
+  <meta name="keywords" content=" Kubernetes , Docker ">
+  <meta name="description" content="00.Kubernetes介绍.md | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="集群机器 m7-demo-136001：172.27.136.1 m7-demo-136002：172.27.136.2 m7-demo-136003：172.27.136.3  本文档中的 etcd 集群、master 节点、worker 节点均使用这三台机器。 组件版本 Kubernetes 1.8.15 Docker 18.06.1-ce Etcd 3.3.9 Flanneld 0.10.0">
 <meta name="keywords" content="Kubernetes,Docker">
@@ -48,7 +48,7 @@
   <input class="theme_preload_comment" value="false">
 </div>
 <body>
-<aside class="nav mobile">
+<aside class="nav">
     <div class="nav-left">
         <a href="/" class="avatar_target">
     <img class="avatar" src="/img/avatar.jpg">
@@ -190,10 +190,57 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article class="index">
-            <div class="toc-ref">
+        <article id="post-kubernetes-install-guide/00.Kubernetes介绍" class="article article-type-post" itemscope="" itemprop="blogPost">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#家中有无宝，但看门前草"><span class="toc-text">家中有无宝，但看门前草</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于Jason"><span class="toc-text">关于Jason</span></a></li></ol></li></ol>
+        <h1 class="article-title">00.Kubernetes介绍.md</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+            <a href="javascript:" data-rel="kubernetes-install-guide">kubernetes-install-guide</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a href="javascript:" class="color1">Kubernetes</a>
+            
+            <a href="javascript:" class="color2">Docker</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title="更新时间: 2018-10-25 23:14:34">2018-09-06 15:44</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:2.2k</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Kubernetes架构"><span class="toc-text">Kubernetes架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#组件通信"><span class="toc-text">组件通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Etcd"><span class="toc-text">Etcd</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API-Server"><span class="toc-text">API Server</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kube-scheduler"><span class="toc-text">kube-scheduler</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Controller-Manager"><span class="toc-text">Controller Manager</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubelet"><span class="toc-text">Kubelet</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Container-runtime"><span class="toc-text">Container runtime</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kube-proxy"><span class="toc-text">kube-proxy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flannel-Networking"><span class="toc-text">Flannel Networking</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS"><span class="toc-text">DNS</span></a></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -206,31 +253,210 @@
     }
 </style>
 </div>
-            <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h2 id="家中有无宝，但看门前草"><a href="#家中有无宝，但看门前草" class="headerlink" title="家中有无宝，但看门前草"></a>家中有无宝，但看门前草</h2><p>对计算机大数据技术系列哲学的问题的研究和探讨，Where does technology come from, and where does technology go？</p>
-<blockquote>
-<p>13年大数据和云计算开始火热的时候，自己投入了这个IT行业。从北航移动云计算专业的系统学习，实习接触过android、java web开发，到参加工作时已经是大数据工程师，已经在IT行业里尝试不同的岗位。IT这个行业就是技术迭代更新快，学无止境，然而大数据开发需要学习的技术就不胜枚举，比如Hadoop,Hive,Hbase,Spark,Storm,Flink,Zookeeper,TensorFlow等等，语言java、python、scala怎么也要精通一门，但都要会。2017年是一个不平凡的年份，大数据的发展加快了AI市场化，大公司纷纷投入资金和人力。作为一个共产党员不得不说我党的伟大，国家用智慧的眼光在部署人工智能计划，<a href="http://www.gov.cn/zhengce/content/2017-07/20/content_5211996.htm">国务院关于印发新一代人工智能发展规划的通知</a>。</p>
-</blockquote>
-<blockquote>
-<p>有了国家的大力支持，目前稍有大数据方面的经验，会有计划的朝着AI方向迈进。</p>
-</blockquote>
-<blockquote>
-<p>技术的革新和学习都不是那么容易的，需要有系统的计划的系统学习，这就是为什么我会建立属于自己blog的初衷。</p>
-</blockquote>
-<blockquote>
-<p>初来乍到，若技术文章、学习方向有问题，欢迎各位大佬指正和发育，AI的王者荣耀属于我们的，谢谢您的访问！</p>
-</blockquote>
-<p>通过技术性博客，随时写下点滴疑问，让更少的人采坑，时间越长就形成技术成长的轨迹，点亮了自己，也照亮了他人。它不像微博那样碎片化，也不像微信那样关系化，它是superman的展现。</p>
-<h2 id="关于Jason"><a href="#关于Jason" class="headerlink" title="关于Jason"></a>关于Jason</h2><p><strong>Jason</strong> 是huiyang（简会洋）的技术网站。</p>
-<p>到目前为止已经写了<code class="article_number"></code>篇文章， 共<code class="site_word_count"></code>字。</p>
-<p>本站访问人数：<code class="site_uv"></code>人次 ， 访问量：<code class="site_pv"></code>次</p>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Kubernetes架构"><a href="#Kubernetes架构" class="headerlink" title="Kubernetes架构"></a>Kubernetes架构</h1><p>Kubernetes 的整体架构：</p>
+<p><img src="images/components.png" alt="components"></p>
+<p>Kubernetes主要由以下几个核心组件组成：</p>
+<ul>
+<li>etcd 保存了整个集群的状态；</li>
+<li>apiserver 提供了资源操作的唯一入口，并提供认证、授权、访问控制、API注册和发现等机制；</li>
+<li>controller manager 负责维护集群的状态，比如故障检测、自动扩展、滚动更新等；</li>
+<li>scheduler 负责资源的调度，按照预定的调度策略将Pod调度到相应的机器上；</li>
+<li>kubelet 负责维护容器的生命周期，同时也负责Volume（CSI）和网络（CNI）的管理；</li>
+<li>Container runtime 负责镜像管理以及Pod和容器的真正运行（CRI），常用的是 docker；</li>
+<li>kube-proxy 负责为 Service 提供 cluster 内部的服务发现和负载均衡；</li>
+</ul>
+<p>除了核心组件，还有一些推荐的插件：</p>
+<ul>
+<li>kube-dns 负责为整个集群提供DNS服务</li>
+<li>Ingress Controller 为服务提供外网入口</li>
+<li>Heapster 提供资源监控</li>
+<li>Dashboard 提供 GUI</li>
+<li>Federation 提供跨可用区的集群</li>
+</ul>
+<h2 id="组件通信"><a href="#组件通信" class="headerlink" title="组件通信"></a>组件通信</h2><p>Kubernetes 组件之间的通信原理为：</p>
+<ul>
+<li>apiserver 负责 etcd 存储的所有操作，且只有 apiserver 才直接操作 etcd 集群;</li>
+<li>apiserver 对内（集群中的其他组件）和对外（用户）提供统一的 REST API，其他组件均通过 apiserver 进行通信</li>
+<li>controller manager、scheduler、kube-proxy 和 kubelet 等均通过 apiserver watch API 监测资源变化情况，并对资源作相应的操作</li>
+<li>所有需要更新资源状态的操作均通过 apiserver 的 REST API 进行</li>
+<li>apiserver 也会直接调用 kubelet API（如 logs, exec, attach 等），默认不校验 kubelet 证书，但可以通过 –kubelet-certificate-authority 开启（而 GKE 通过 SSH 隧道保护它们之间的通信）</li>
+</ul>
+<p>典型的创建 Pod 的流程为：</p>
+<p><img src="images/workflow.png" alt="workflow"></p>
+<ul>
+<li>用户通过 REST API 创建一个 Pod</li>
+<li>apiserver 将其写入 etcd</li>
+<li>scheduluer 检测到未绑定 Node 的 Pod，开始调度并更新 Pod 的 Node 绑定</li>
+<li>kubelet 检测到有新的 Pod 调度过来，通过 container runtime 运行该 Pod</li>
+<li>kubelet 通过 container runtime 取到 Pod 状态，并更新到 apiserver 中</li>
+</ul>
+<h2 id="Etcd"><a href="#Etcd" class="headerlink" title="Etcd"></a>Etcd</h2><p>Etcd 是基于 Raft 的分布式 key-value 存储系统，由 CoreOS 开发，常用于服务发现、共享配置以及并发控制（如 leader 选举、分布式锁等）。</p>
+<p>Etcd 主要功能：</p>
+<ul>
+<li>基本的 key-value 存储</li>
+<li>监听机制</li>
+<li>key 的过期及续约机制，用于监控和服务发现</li>
+<li>原子 CAS 和 CAD，用于分布式锁和 leader 选举</li>
+</ul>
+<p>Etcd 用于保存集群所有的网络配置和对象的状态信息：</p>
+<ul>
+<li>网络插件flannel、对于其它网络插件也需要用到etcd存储网络的配置信息</li>
+<li>kubernetes本身，包括各种对象的状态和元信息配置</li>
+</ul>
+<p>etcd 架构图：</p>
+<p><img src="images/etcd_arch.jpg" alt="etcd的架构图"></p>
+<h2 id="API-Server"><a href="#API-Server" class="headerlink" title="API Server"></a>API Server</h2><p>kube-apiserver 是 Kubernetes 最重要的核心组件之一，主要提供以下的功能：</p>
+<ul>
+<li>提供集群管理的 REST API 接口，包括认证授权、数据校验以及集群状态变更等</li>
+<li>提供其他模块之间的数据交互和通信的枢纽（其他模块通过 API Server 查询或修改数据，只有 API Server 才直接操作 etcd）</li>
+</ul>
+<p>kube-apiserver 支持同时提供 https（默认监听在 6443 端口）和 http API（默认监听在 127.0.0.1 的 8080 端口），其中 http API 是非安全接口，不做任何认证授权机制，不建议生产环境启用。</p>
+<h2 id="kube-scheduler"><a href="#kube-scheduler" class="headerlink" title="kube-scheduler"></a>kube-scheduler</h2><p>kube-scheduler 负责分配调度 Pod 到集群内的节点上，它监听 kube-apiserver，查询还未分配 Node 的 Pod，然后根据调度策略为这些 Pod 分配节点（更新 Pod 的 NodeName 字段）。</p>
+<p>调度器需要充分考虑诸多的因素：</p>
+<ul>
+<li>公平调度</li>
+<li>资源高效利用</li>
+<li>QoS</li>
+<li>affinity 和 anti-affinity</li>
+<li>数据本地化（data locality）</li>
+</ul>
+<h2 id="Controller-Manager"><a href="#Controller-Manager" class="headerlink" title="Controller Manager"></a>Controller Manager</h2><p>Controller Manager 由 kube-controller-manager 和 cloud-controller-manager 组成，是 Kubernetes 的大脑，它通过 apiserver 监控整个集群的状态，并确保集群处于预期的工作状态。</p>
+<p>kube-controller-manager 由一系列的控制器组成：</p>
+<ul>
+<li>Replication Controller</li>
+<li>Node Controller</li>
+<li>CronJob Controller</li>
+<li>Daemon Controller</li>
+<li>Deployment Controller</li>
+<li>Endpoint Controller</li>
+<li>Garbage Collector</li>
+<li>Namespace Controller</li>
+<li>Job Controller</li>
+<li>RelicaSet</li>
+<li>Service Controller</li>
+<li>ServiceAccount Controller</li>
+<li>StatefulSet Controller</li>
+<li>Volume Controller</li>
+<li>Resource quota Controller</li>
+</ul>
+<p>cloud-controller-manager 在 Kubernetes 启用 Cloud Provider 的时候才需要，用来配合云服务提供商的控制，也包括一系列的控制器，如：</p>
+<ul>
+<li>Node Controller</li>
+<li>Route Controller</li>
+<li>Service Controller</li>
+</ul>
+<h2 id="Kubelet"><a href="#Kubelet" class="headerlink" title="Kubelet"></a>Kubelet</h2><p>每个节点上都运行一个 kubelet 服务进程，默认监听 10250 端口，接收并执行 master 发来的指令，管理 Pod 及 Pod 中的容器。每个 kubelet 进程会在 API Server 上注册节点自身信息，定期向 master 节点汇报节点的资源使用情况，并通过 cAdvisor 监控节点和容器的资源。</p>
+<ol>
+<li>节点管理：主要是节点自注册和节点状态更新：<ul>
+<li>Kubelet 可以通过设置启动参数 –register-node 来确定是否向 API Server 注册自己；</li>
+<li>如果 Kubelet 没有选择自注册模式，则需要用户自己配置 Node 资源信息，同时需要告知 Kubelet 集群上的 API Server 的位置；</li>
+<li>Kubelet 在启动时通过 API Server 注册节点信息，并定时向 API Server 发送节点新消息，API Server 在接收到新消息后，将信息写入 etcd</li>
+</ul>
+</li>
+<li>Pod 管理<ul>
+<li>获取 Pod 清单</li>
+<li>通过 API Server 获取 Pod 清单及创建 Pod 的过程</li>
+<li>Static Pod</li>
+</ul>
+</li>
+<li>容器健康检查：LivenessProbe 探针：用于判断容器是否健康；ReadinessProbe：用于判断容器是否启动完成且准备接收请求；</li>
+<li>cAdvisor 资源监控：</li>
+<li>Kubelet Eviction（驱逐）：Kubelet 会监控资源的使用情况，并使用驱逐机制防止计算和存储资源耗尽。在驱逐时，Kubelet 将 Pod 的所有容器停止，并将 PodPhase 设置为 Failed。</li>
+</ol>
+<p><img src="images/kubelet.png" alt="kubelet"></p>
+<h2 id="Container-runtime"><a href="#Container-runtime" class="headerlink" title="Container runtime"></a>Container runtime</h2><p>容器运行时（Container Runtime）是 Kubernetes 最重要的组件之一，负责真正管理镜像和容器的生命周期。</p>
+<p>Kubelet 通过 Container Runtime Interface (CRI) 与容器运行时交互，以管理镜像和容器。</p>
+<p><img src="images/cri.png" alt="cri"></p>
+<p>CRI 基于 gRPC 定义了 RuntimeService 和 ImageService 等两个 gRPC 服务，分别用于容器运行时和镜像的管理。</p>
+<p>Kubelet 作为 CRI 的客户端，而容器运行时则需要实现 CRI 的服务端（即 gRPC server，通常称为 CRI shim）。</p>
+<p>容器运行时在启动 gRPC server 时需要监听在本地的 Unix Socket （Windows 使用 tcp 格式）。</p>
+<p>Docker：</p>
+<p><img src="images/containerd.png" alt="containerd"></p>
+<p>实际情况：</p>
+<pre><code class="bash">  /opt/k8s/bin/dockerd --log-level=error --bip=172.30.208.1/21 --ip-masq=true --mtu=1450
+    docker-containerd --config /mnt/disk0/docker/exec/containerd/containerd.toml
+      docker-containerd-shim -namespace moby -workdir /mnt/disk0/docker/data/containerd/daemon/io.containerd.runtime.v1.linux/moby/8bc312bc -address
+ /mnt/disk0/docker/exec/containerd/docker-containerd.sock -containerd-binary /opt/k8s/bin/docker-containerd -runtime-root /mnt/disk0/docker/exec/runtime-runc -debug
+        /usr/bin/pod
+      docker-containerd-shim -namespace moby -workdir /mnt/disk0/docker/data/containerd/daemon/io.containerd.runtime.v1.linux/moby/a86833a9df627bbb0917c42ca -address
+ /mnt/disk0/docker/exec/containerd/docker-containerd.sock -containerd-binary /opt/k8s/bin/docker-containerd -runtime-root /mnt/disk0/docker/exec/runtime-runc -debug
+        nginx: master process nginx -g daemon off;
+</code></pre>
+<p>kubelet 与 docker 的交互：</p>
+<p><img src="images/docker_cri.png" alt="docker_cri"></p>
+<h2 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h2><p>每台机器上都运行一个 kube-proxy 服务，它监听 API server 中 service 和 endpoint 的变化情况，并通过 iptables 等来为服务配置负载均衡（仅支持 TCP 和 UDP）。</p>
+<p><img src="images/iptables-mode.png" alt="iptables-mode"></p>
+<h2 id="Flannel-Networking"><a href="#Flannel-Networking" class="headerlink" title="Flannel Networking"></a>Flannel Networking</h2><p>kubernetes 要求集群内各节点(包括 master 节点)能通过 Pod 网段互联互通。flannel 使用 vxlan 技术为各节点创建一个可以互通的 Pod 网络。</p>
+<p>flaneel 第一次启动时，从 etcd 获取 Pod 网段信息，为本节点分配一个未使用的 <code>/24</code> 段地址，然后创建 <code>flannedl.1</code>（也可能是其它名称，如 flannel1 等） 接口。</p>
+<p>Flannel是作为一个二进制文件的方式部署在每个node上，主要实现两个功能：</p>
+<ul>
+<li>为每个node分配subnet，容器将自动从该子网中获取IP地址</li>
+<li>当有node加入到网络中时，为每个node增加路由配置</li>
+</ul>
+<p><img src="images/flannel-networking.png" alt="flannel-networking"></p>
+<pre><code class="bash">[root@m7-power-k8s03 ~]# ip addr show flannel.1
+4: flannel.1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UNKNOWN group default
+    link/ether 8e:32:57:c9:0c:0e brd ff:ff:ff:ff:ff:ff
+    inet 172.30.208.0/32 scope global flannel.1
+       valid_lft forever preferred_lft forever
+[root@m7-power-k8s03 ~]# ip addr show docker0
+5: docker0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UP group default
+    link/ether 02:42:fb:51:b0:80 brd ff:ff:ff:ff:ff:ff
+    inet 172.30.208.1/21 brd 172.30.215.255 scope global docker0
+       valid_lft forever preferred_lft forever
+[root@m7-power-k8s03 ~]# ip route show|grep flann  # 到其它节点的路由
+172.30.160.0/21 via 172.30.160.0 dev flannel.1 onlink
+172.30.240.0/21 via 172.30.240.0 dev flannel.1 onlink
+</code></pre>
+<h2 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h2><p>DNS 是 Kubernetes 的核心功能之一，通过 kube-dns 或 CoreDNS 作为集群的必备扩展来提供命名服务。</p>
+<p>支持的 DNS 格式:</p>
+<ol>
+<li>Service<ul>
+<li>A record：生成 my-svc.my-namespace.svc.cluster.local，解析 IP 分为两种情况<ul>
+<li>普通 Service 解析为 Cluster IP</li>
+<li>Headless Service 解析为指定的 Pod IP 列表</li>
+</ul>
+</li>
+<li>SRV record：生成 _my-port-name._my-port-protocol.my-svc.my-namespace.svc.cluster.local</li>
+</ul>
+</li>
+<li>Pod<ul>
+<li>A record：pod-ip-address.my-namespace.pod.cluster.local</li>
+<li>指定 hostname 和 subdomain：hostname.custom-subdomain.default.svc.cluster.local，如下所示</li>
+</ul>
+</li>
+</ol>
 
-        </article>
-        
-        <p>
-            <a href="javascript:void(0)" class="dashang" onclick="dashangToggle()">赏</a>
-        </p>
-        
-        
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 978035491@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a href="javascript:void(0)" class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+<div class="article_copyright">
+    <p><span>文章标题:</span>00.Kubernetes介绍.md</p>
+    <p><span>文章字数:</span><span class="post-count">2.2k</span></p>
+    <p><span>本文作者:</span><a href="javascript:void(0)" title="Jason">Jason</a></p>
+    <p><span>发布时间:</span>2018-09-06, 15:44:56</p>
+    <p><span>最后更新:</span>2018-10-25, 23:14:34</p>
+    <span>原始链接:</span><a class="post-url" href="/2018/09/06/kubernetes-install-guide/00.Kubernetes介绍/" title="00.Kubernetes介绍.md">https://jianhuiyang.github.io/2018/09/06/kubernetes-install-guide/00.Kubernetes介绍/</a>
+    <p>
+        <span>版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
+</div>
+
+
+
+
+    
+
     </div>
     <div class="copyright">
         <p class="footer-entry">©2017 Yelog</p>
